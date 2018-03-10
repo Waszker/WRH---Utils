@@ -21,12 +21,13 @@ def in_thread(method):
     return run_thread
 
 
-def with_open(filename, mode, exceptions):
+def with_open(filename, mode, exceptions=(IOError,)):
     """
     Runs provided method with additional named parameter being the requested, opened file object,
     located in wrh operating path.
     The additional parameter is available under '_file_' name.
-    If the requested file does not exist, method is not invoked.
+    By default, if the requested file does not exist, method is not invoked but no error is thrown. This can be changed
+    by changing exceptions parameter list.
     :param filename: name of the file in the system (wrh operation path is added automatically)
     :type filename: str
     :param mode: mode in which file should be opened
