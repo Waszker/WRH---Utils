@@ -46,7 +46,7 @@ def wrh_input(allowed_empty=False, message='', input_type=str, sanitizer=lambda 
     """
     while True:
         try:
-            answer = input(message)
+            answer = raw_input(message)
             if allowed_empty and not answer:
                 break
             answer = input_type(answer)
