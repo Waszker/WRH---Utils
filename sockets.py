@@ -1,6 +1,5 @@
 import socket as s
 import time
-from contextlib import contextmanager
 
 from utils.io import log, Color
 
@@ -40,21 +39,23 @@ def await_connection(socket, callback, predicate=lambda: True, close_connection=
             callback(connection, address)
             if close_connection:
                 connection.close()
-        except s.error:
+        except (s.error, OSError):
             pass
 
 
-@contextmanager
 def open_connection(*args, **kwargs):
     """
-    Context manager method for opening TCP connections.
+    Generator method for opening TCP connections.
     """
+    connection = None
     try:
         connection = s.create_connection(*args, **kwargs)
         yield connection
-        connection.close()
-    except (s.error, RuntimeError):
+    except s.error:
         pass
+    finally:
+        if connection:
+            connection.close()
 
 
 def receive_message(host, port, buffer_size=1024, message=None):
@@ -70,7 +71,7 @@ def receive_message(host, port, buffer_size=1024, message=None):
     """
     host, port = str(host), int(port)
     data = None
-    with open_connection((host, port)) as connection:
+    for connection in open_connection((host, port)):
         if message:
             connection.send(message)
         data = connection.recv(buffer_size)
@@ -86,5 +87,5 @@ def send_message(host, port, message):
     :param message: message to send
     """
     host, port = str(host), int(port)
-    with open_connection((host, port)) as connection:
+    for connection in open_connection((host, port)):
         connection.send(message)

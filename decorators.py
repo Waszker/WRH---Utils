@@ -49,3 +49,21 @@ def with_open(filename, mode, exceptions=(IOError,)):
         return open_and_run
 
     return inner
+
+
+def ignore_exceptions(exceptions_list):
+    """
+    Function wrapper that ignores provided exceptions raised withing wrapped function.
+    :param exceptions_list: list of expected exceptions
+    """
+
+    def inner(method):
+        def run(*args, **kwargs):
+            try:
+                method(*args, **kwargs)
+            except exceptions_list:
+                pass
+
+        return run
+
+    return inner
