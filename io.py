@@ -4,6 +4,11 @@ from enum import Enum
 Set of commands to deal with input/output operations.
 """
 
+try:
+    input_func = raw_input
+except NameError:
+    input_func = input
+
 
 class Color(Enum):
     NORMAL = '\033[0m'
@@ -46,7 +51,7 @@ def wrh_input(allowed_empty=False, message='', input_type=str, sanitizer=lambda 
     """
     while True:
         try:
-            answer = raw_input(message)
+            answer = input_func(message)
             if allowed_empty and not answer:
                 break
             answer = input_type(answer)
