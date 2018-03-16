@@ -1,8 +1,17 @@
+import inspect
+import logging
+
+import sys
+
+import os
 from enum import Enum
 
 """
 Set of commands to deal with input/output operations.
 """
+
+logging.basicConfig(filename='/var/log/wrh.log', level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S",
+                    format='%(asctime)s %(levelname)s %(message)s')
 
 try:
     input_func = raw_input
@@ -19,22 +28,35 @@ class Color(Enum):
     FAIL = '\033[91m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    EXCEPTION = str(FAIL) + str(BOLD)
 
     def __str__(self):
         return str(self.value)
 
 
-def log(message, color=Color.NORMAL):
+def log(message, color=Color.NORMAL, *colors):
     """
     Prints provided message to the screen using color of choice.
+    Messages with Fail or WARNING colors are additionally saved to log file.
     :param message: text to display
     :param color: color enum
+    :param colors: any number of additional styles applied to displayed text
     """
-    try:
-        decoration = ''.join([str(c) for c in color])
-    except TypeError:
-        decoration = str(color)
-    print(''.join((decoration, str(message), str(Color.NORMAL))))
+    styles = (color, ) + colors
+    decoration = ''.join(map(str, styles))
+    msg = ''.join((decoration, str(message), str(Color.NORMAL)))
+    print(msg)
+
+    caller_info = inspect.getframeinfo(inspect.currentframe().f_back)
+    msg = 'in {} line {}: {}'.format(caller_info.filename.split(os.sep)[-1], caller_info.lineno, message)
+    if Color.FAIL in styles:
+        logging.error(msg)
+    elif Color.FAIL in styles:
+        logging.error(msg)
+    elif Color.EXCEPTION in styles:
+        logging.exception(msg)
+    else:
+        logging.info(msg)
 
 
 def wrh_input(allowed_empty=False, message='', input_type=str, sanitizer=lambda x: True, allowed_exceptions=()):

@@ -21,7 +21,7 @@ def wait_bind_socket(socket, host, port, sleep, retries=-1, predicate=lambda: Tr
             break
         except s.error as message:
             if error_message:
-                log(str(error_message) + str(message), Color.FAIL)
+                log(str(error_message) + str(message), Color.EXCEPTION)
             time.sleep(sleep)
             retries = max(-1, retries - 1)
     return predicate() and retries != 0

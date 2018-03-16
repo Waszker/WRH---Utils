@@ -1,5 +1,7 @@
 import threading
 
+from utils.io import log, Color
+
 """
 Set of decorators that can be useful.
 """
@@ -63,6 +65,24 @@ def ignore_exceptions(exceptions_list):
                 method(*args, **kwargs)
             except exceptions_list:
                 pass
+
+        return run
+
+    return inner
+
+
+def log_exceptions(exceptions_list=(Exception,)):
+    """
+    Function wrapper that logs only provided exceptions raised withing wrapped function.
+    :param exceptions_list: list of expected exceptions to be logged
+    """
+
+    def inner(method):
+        def run(*args, **kwargs):
+            try:
+                method(*args, **kwargs)
+            except exceptions_list as e:
+                log(e, Color.EXCEPTION)
 
         return run
 
