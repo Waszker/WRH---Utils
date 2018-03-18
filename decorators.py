@@ -83,6 +83,7 @@ def log_exceptions(exceptions_list=(Exception,)):
                 method(*args, **kwargs)
             except exceptions_list as e:
                 log(e, Color.EXCEPTION)
+                raise
 
         return run
 
