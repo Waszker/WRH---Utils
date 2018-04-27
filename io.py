@@ -8,7 +8,7 @@ from enum import Enum
 Set of commands to deal with input/output operations.
 """
 
-logging.basicConfig(filename='/tmp/wrh.log', level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S",
+logging.basicConfig(filename='/var/log/wrh.log', level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S",
                     format='%(asctime)s %(levelname)s %(message)s')
 
 
