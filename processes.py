@@ -26,7 +26,7 @@ def print_process_errors(process):
     """
     while does_process_exist(process):
         _, err = process.communicate()
-        log(err, Color.FAIL)
+        log(err.decode('utf_8'), Color.FAIL)
 
 
 def end_process(process, timeout, suppress_messages=False):

@@ -75,7 +75,7 @@ def receive_message(host, port, buffer_size=1024, message=None):
         if message:
             connection.send(message)
         data = connection.recv(buffer_size)
-    return data
+    return data.decode('utf-8')
 
 
 def send_message(host, port, message):
@@ -88,4 +88,4 @@ def send_message(host, port, message):
     """
     host, port = str(host), int(port)
     for connection in open_connection((host, port)):
-        connection.send(message)
+        connection.send(message.encode('utf-8'))
