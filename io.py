@@ -1,8 +1,6 @@
 import inspect
 import logging
 
-import sys
-
 import os
 from enum import Enum
 
@@ -10,13 +8,8 @@ from enum import Enum
 Set of commands to deal with input/output operations.
 """
 
-logging.basicConfig(filename='/var/log/wrh.log', level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S",
+logging.basicConfig(filename='/tmp/wrh.log', level=logging.INFO, datefmt="%Y-%m-%d %H:%M:%S",
                     format='%(asctime)s %(levelname)s %(message)s')
-
-try:
-    input_func = raw_input
-except NameError:
-    input_func = input
 
 
 class Color(Enum):
@@ -61,7 +54,7 @@ def log(message, color=Color.NORMAL, *colors):
 
 def wrh_input(allowed_empty=False, message='', input_type=str, sanitizer=lambda x: True, allowed_exceptions=()):
     """
-    Input sanitizing function that can be used for requesting specific input formats
+    Input sanitizing function that can be used for requesting specific input formats.
     (see non_empty_numeric_input(), etc.)
     :param allowed_empty: is input allowed to be empty
     :param message: message to be displayed
@@ -73,7 +66,7 @@ def wrh_input(allowed_empty=False, message='', input_type=str, sanitizer=lambda 
     """
     while True:
         try:
-            answer = input_func(message)
+            answer = input(message)
             if allowed_empty and not answer:
                 break
             answer = input_type(answer)

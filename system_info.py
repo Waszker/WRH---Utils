@@ -2,7 +2,8 @@
 Set of instructions for getting information about the system.
 """
 
-import urllib2
+from urllib.error import URLError
+from urllib.request import urlopen
 
 
 def get_cpu_temp():
@@ -56,9 +57,8 @@ def is_internet_connection():
     :return: boolean information whether Internet connection is present
     """
     try:
-        urllib2.urlopen('https://www.google.com', timeout=5)
+        urlopen('https://www.google.com', timeout=5)
         is_internet = True
-    except urllib2.URLError:
+    except URLError:
         is_internet = False
-
     return is_internet
