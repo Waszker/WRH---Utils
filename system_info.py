@@ -11,10 +11,12 @@ def get_cpu_temp():
     Returns information about cpu temperature.
     :return: cpu temperature float value
     """
-    temp_file = open("/sys/class/thermal/thermal_zone0/temp")
-    cpu_temp = temp_file.read()
-    temp_file.close()
-    return float(cpu_temp) / 1000
+    try:
+        with open("/sys/class/thermal/thermal_zone0/temp") as temp_file:
+            cpu_temp = float(temp_file.read()) / 1000
+    except (FileNotFoundError, ValueError):
+        cpu_temp = '?'
+    return cpu_temp
 
 
 def get_uptime():
